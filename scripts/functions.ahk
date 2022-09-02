@@ -1,7 +1,10 @@
 ; v0.8
 
-SendObsCmd(cmd) {
-  FileAppend, %cmd%`n, %obsFile%
+SendOBSCmd(cmd) {
+    static cmdNum := 1
+    static cmdDir := Format("{1}\scripts\pyCmds\", A_ScriptDir)
+    FileAppend, %cmd%, %cmdDir%%cmdNum%.txt
+    cmdNum++
 }
 
 SendLog(lvlText, msg) {
@@ -278,19 +281,7 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
     killFile := McDirectories[idx] . "kill.tmp"
     FileAppend,,%killFile%
     if (useObsWebsocket) {
-      prevBg := currBg
-      currBg := GetFirstBgInstance(idx, skipBg)
-      if (prevBg == currBg) {
-        hideMini := -1
-        showMini := -1
-      } else {
-        hideMini := prevBg
-        showMini := currBg
-      }
-      if (useSingleSceneOBS)
-        SendOBSCmd("ss-si" . " " . from . " " . idx . " " . hideMini . " " . showMini)
-      Else
-        SendOBSCmd("si " . idx)
+      SendOBSCmd("Play," . idx)
     }
     FileDelete,data/instance.txt
     FileAppend,%idx%,data/instance.txt
@@ -428,10 +419,7 @@ ToWall(comingFrom) {
   WinMaximize, Fullscreen Projector
   WinActivate, Fullscreen Projector
   if (useObsWebsocket) {
-    if (useSingleSceneOBS)
-      SendOBSCmd("ss-tw" . " " . comingFrom)
-    Else
-      SendOBSCmd("tw")
+    SendOBSCmd("ToWall")
   }
   else {
     send {%obsWallSceneKey% down}
@@ -608,7 +596,7 @@ WorldBop() {
 }
 
 CloseInstances() {
-  MsgBox, 4, Close Instances?, Are you sure you want to close all of your instances?
+  MsgBox, 4, End Session?, Are you sure you want to end your speedrunning session?, This will close all instances and macro.
   IfMsgBox No
   Return
   for i, pid in PIDs {
@@ -619,6 +607,7 @@ CloseInstances() {
     WinClose, ahk_pid %rmpid%
   }
   DetectHiddenWindows, Off
+  ExitApp
 }
 
 GetLineCount(file) {

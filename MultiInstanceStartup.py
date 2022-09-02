@@ -10,6 +10,8 @@ mmc = r"C:\Users\Aeroshide\Documents\MultiMC" # Change this to match your mmc lo
 obs = r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OBS Studio\OBS Studio (64bit).lnk" # Change this to match your obs location (Optional)
 ninjabot = r"C:\Users\Aeroshide\Documents\Ninjabrain-Bot-1.2.0.jar" # Change this to match your ninjabot location (Optional)
 
+doStartPeripherals = False
+
 instance_format = "inst" # Change this to match your instance naming convention (example, inst1, inst2.. etc)
 instance_count = 12 # Change to match instance count
 
@@ -34,5 +36,5 @@ for i in range(1, instance_count+1):
     print(f"Starting instance {i} with codename {instance_format}")
     os.system(f"{mmc}\MultiMC.exe -l {instance_format}{i}")
     sleep(wait)
-    if (i == instance_count):
+    if (i == instance_count & doStartPeripherals):
        startPeripherals()

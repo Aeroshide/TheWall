@@ -21,7 +21,7 @@ return
     *E::FocusReset(MousePosToInstNumber())
     *R::ResetAll()
     F::Locking(MousePosToInstNumber())
-    *D::ResetOverride(MousePosToInstNumber());
+    *D::ResetOverride(MousePosToInstNumber())
 
     ; Optional (Remove semicolon ';' and set a hotkey)
     ; ::PlayNextLock()

@@ -3,17 +3,16 @@ import os
 import sys
 import time
 from obswebsocket import obsws, requests
+import simpleobsws
 import obsSettings as config
 
-ws = obsws(config.host, config.port, config.password)
-try:
-    ws.connect()
-    with open("data/obs.log", "w") as log:
-        log.write("Connected\n")
-except:
-    with open("data/obs.log", "w") as log:
-        log.write("Could not connect to obsws\n")
-        quit()
+parameters = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks = False)
+#ws = obsws(config.host, config.port, config.password)
+ws = simpleobsws.WebSocketClient(url = 'ws://localhost:4455', password = '', identification_parameters = parameters)
+
+async def make_request():
+    await ws.connect()
+    await ws.wait_until_identified()
 
 instances = int(sys.argv[1])
 last_completed_obs_line = -1

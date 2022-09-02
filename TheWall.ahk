@@ -136,7 +136,7 @@ if (SubStr(RunHide("python.exe --version"), 1, 6) == "Python")
 else
   SendLog(LOG_LEVEL_WARNING, "Missing Python installation. No Delete Worlds option added to tray")
 
-Menu, Tray, Add, Close Instances, CloseInstances
+Menu, Tray, Add, End Session, CloseInstances
 
 SendLog(LOG_LEVEL_INFO, "Wall setup done")
 if (!disableTTS)

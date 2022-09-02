@@ -45,9 +45,9 @@ global obsLockMediaKey := "" ; Key pressed on any lock instance with sound (used
 global obsUnlockMediaKey := "" ; Key pressed on any unlock instance with sound (used for playing unlock media file in obs for recordable/streamable unlock sounds and requires addition setup to work)
 
 ; Reset Management
-global resetManagementTimeout := -1 ; Time that pass before reset manager gives up. Too high may leave unresetable instances, too low will leave instances unpaused. Default (20000) likely fine
+global resetManagementTimeout := -1 ; Time that pass before reset manager gives up (in seconds). Too high may leave unresetable instances, too low will leave instances unpaused. leave it be for no timeout
 global manageResetAfter := 200 ; Delay before starting reset management log reading loop. Default (200) likely fine
-global resetManagementLoopDelay := 240 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
+global resetManagementLoopDelay := 120 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
 
 ; Attempts
 global overallAttemptsFile := "data/ATTEMPTS.txt" ; File to write overall attempt count to
