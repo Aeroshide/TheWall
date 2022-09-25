@@ -135,8 +135,10 @@ if (SubStr(RunHide("python.exe --version"), 1, 6) == "Python")
   Menu, Tray, Add, Delete Worlds, WorldBop
 else
   SendLog(LOG_LEVEL_WARNING, "Missing Python installation. No Delete Worlds option added to tray")
+;Menu, Tray, Add, Sync Config, SyncConfig
 
 Menu, Tray, Add, End Session, CloseInstances
+
 
 SendLog(LOG_LEVEL_INFO, "Wall setup done")
 if (!disableTTS)

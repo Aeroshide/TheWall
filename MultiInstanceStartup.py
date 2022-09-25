@@ -15,7 +15,7 @@ doStartPeripherals = False
 instance_format = "inst" # Change this to match your instance naming convention (example, inst1, inst2.. etc)
 instance_count = 12 # Change to match instance count
 
-wait = 10 # basically how fast is the script gonna wait until it launches the next little command (seconds)
+wait = 20 # basically how fast is the script gonna wait until it launches the next little command (seconds)
 longwait = 60 # basically the time you give to your instances to properlly load up for the wall (seconds)
 # if your pc isnt good enough, increase this number, or else some instances might be skipped
 

@@ -595,6 +595,20 @@ WorldBop() {
   MsgBox, Completed World Bopping!
 }
 
+SyncConfig()
+{
+  if (idx != 1) {
+    mainConfig := Format("{1}\instances\{2}\.minecraft\config\", multiMCLocation, StrReplace(multiMCNameFormat, "*", 1))
+    thisConfig := Format("{1}\instances\{2}\.minecraft\config\", multiMCLocation, StrReplace(multiMCNameFormat, "*", idx))
+    FileCopy, %mainConfig%\*.*, %thisConfig%\*.*, 1
+    if (ErrorLevel == 0)
+      MsgBox, 0, Info, Synced configs successfully
+    else
+      MsgBox, 0, Info, Something went wrong when syncing configs
+}
+}
+
+
 CloseInstances() {
   MsgBox, 4, End Session?, Are you sure you want to end your speedrunning session?, This will close all instances and macro.
   IfMsgBox No

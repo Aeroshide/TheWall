@@ -1,5 +1,9 @@
 ; v0.8
 
+; Directory, Environment And Schemes Configuration
+multiMCLocation := "C:\Users\Aeroshide\Documents\MultiMC"
+multiMCNameFormat := "inst*"
+
 ; General settings
 global rows := 3 ; Number of row on the wall scene (the one that goes down)
 global cols := 4 ; Number of columns on the wall scene (the one that goes left)
