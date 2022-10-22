@@ -2,7 +2,7 @@
 
 ; General settings
 global rows := 3 ; Number of row on the wall scene (the one that goes down)
-global cols := 4 ; Number of columns on the wall scene (the one that goes left)
+global cols := 3 ; Number of columns on the wall scene (the one that goes left)
 global mode := "W" ; W = Normal wall, B = Wall bypass (skip to next locked), M = Modern multi (send to wall when none loaded), C = Classic original multi (always force to next instance)
 global windowMode := "B" ; W = windowed mode, F = fullscreen mode, B = borderless windowed
 
@@ -29,11 +29,11 @@ global tinderCheckBuffer := 5 ; When all instances cant reset, how often it chec
 ; -1 == use macro math to determine thread counts
 global affinityType := "A" ; N = no affinity management, B = basic affinity management, A = advanced affinity mangement (best if used with locking+resetAll)
 global playThreadsOverride := 8 ; Thread count dedicated to the instance you are playing
-global lockThreadsOverride := 5 ; Thread count dedicated to locked instances while on wall
-global highThreadsOverride := 7 ; Thread count dedicated to instances that have just been reset but not previewing
-global midThreadsOverride := 6 ; Thread count dedicated to loading preview instances on wall
-global lowThreadsOverride := 2 ; Thread count dedicated to loading bg instances and idle wall instances
-global superLowThreadsOverride := 1 ; Thread count dedicated to idle bg instances
+global lockThreadsOverride := -1 ; Thread count dedicated to locked instances while on wall
+global highThreadsOverride := -1 ; Thread count dedicated to instances that have just been reset but not previewing
+global midThreadsOverride := -1 ; Thread count dedicated to loading preview instances on wall
+global lowThreadsOverride := -1 ; Thread count dedicated to loading bg instances and idle wall instances
+global superLowThreadsOverride := -1 ; Thread count dedicated to idle bg instances
 global loadBurstLength := 300 ; How many milliseconds the prior thread count stays dedicated to an instance before switching to the next stage while ACTIVELY LOADING INSTANCES (less important for basic affinity)
 
 ; OBS
