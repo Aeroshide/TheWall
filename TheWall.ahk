@@ -138,6 +138,8 @@ else
 
 Menu, Tray, Add, End Session, CloseInstances
 
+SendOBSCmd("Reload")
+
 SendLog(LOG_LEVEL_INFO, "Wall setup done")
 if (!disableTTS)
   ComObjCreate("SAPI.SpVoice").Speak("Ready")
