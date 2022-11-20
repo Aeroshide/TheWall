@@ -287,8 +287,6 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
     FileAppend,%idx%,data/instance.txt
     pid := PIDs[idx]
     SetAffinities(true, idx)
-    if !locked[idx]
-      LockInstance(idx, False, False)
     ;ControlSend,, {Blind}{Esc}, ahk_pid %pid%
     if doF1
       ControlSend,, {Blind}{F1}, ahk_pid %pid%
@@ -316,10 +314,8 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
       Sleep, %obsDelay%
       Send {%obsKey% up}
     }
-  } else {
-    if !locked[idx]
-      LockInstance(idx, False)
   }
+
 }
 
 GetActiveInstanceNum() {
@@ -331,7 +327,7 @@ GetActiveInstanceNum() {
   return -1
 }
 
-ExitWorld()
+ExitWorld(nextInst:=-1)
 {
   idx := GetActiveInstanceNum()
   pid := PIDs[idx]
@@ -350,17 +346,14 @@ ExitWorld()
       WinRestore, ahk_pid %pid%
       WinMove, ahk_pid %pid%,,0,0,%A_ScreenWidth%,%newHeight%
     }
-    nextInst := -1
-    if (mode == "C") {
+    if (mode == "C" && nextInst == -1)
       nextInst := Mod(idx, instances) + 1
-    } else if (mode == "B" || mode == "M")
+    else if ((mode == "B" || mode == "M") && nextInst == -1)
       nextInst := FindBypassInstance()
     if (nextInst > 0)
-      SwitchInstance(nextInst, false, idx)
+      SwitchInstance(nextInst)
     else
       ToWall(idx)
-    if doF1
-      ControlSend,, {Blind}{F1}, ahk_pid %pid%
     SetAffinities()
     ResetInstance(idx)
     isWide := False
@@ -575,15 +568,10 @@ UnlockAll(sound:=true) {
 }
 
 PlayNextLock(focusReset:=false, bypassLock:=false) {
-  loop, %instances% {
-    if (locked[A_Index] && FileExist(McDirectories[A_Index] . "idle.tmp")) {
-      if focusReset
-        FocusReset(A_Index, bypassLock)
-      else
-        SwitchInstance(A_Index)
-      return
-    }
-  }
+  if (GetActiveInstanceNum() > 0)
+    ExitWorld(FindBypassInstance())
+  else
+    SwitchInstance(FindBypassInstance())
 }
 
 WorldBop() {

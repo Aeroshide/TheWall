@@ -25,16 +25,15 @@ global tinderCheckBuffer := 5 ; When all instances cant reset, how often it chec
 
 ; Super advanced settings (Do not change unless you know exactly absolutely what you are doing
 
-; Affinity
+; CPU Thread scheduling affinity
 ; -1 == use macro math to determine thread counts
-global affinityType := "A" ; N = no affinity management, B = basic affinity management, A = advanced affinity mangement (best if used with locking+resetAll)
 global playThreadsOverride := -1 ; Thread count dedicated to the instance you are playing
 global lockThreadsOverride := -1 ; Thread count dedicated to locked instances while on wall
 global highThreadsOverride := -1 ; Thread count dedicated to instances that have just been reset but not previewing
 global midThreadsOverride := -1 ; Thread count dedicated to loading preview instances on wall
 global lowThreadsOverride := -1 ; Thread count dedicated to loading bg instances and idle wall instances
 global superLowThreadsOverride := -1 ; Thread count dedicated to idle bg instances
-global loadBurstLength := 100 ; How many milliseconds the prior thread count stays dedicated to an instance before switching to the next stage while ACTIVELY LOADING INSTANCES (less important for basic affinity)
+global loadBurstLength := 75 ; How many milliseconds the prior thread count stays dedicated to an instance before switching to the next stage while ACTIVELY LOADING INSTANCES (less important for basic affinity)
 
 ; OBS
 global obsSceneControlType := "N" ; N = Numpad hotkeys (up to 9 instances), F = Function hotkeys f13-f24 (up to 12 instances), A = advanced key array (too many instances)

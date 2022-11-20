@@ -28,11 +28,11 @@ global resets := 0
 
 EnvGet, threadCount, NUMBER_OF_PROCESSORS
 global playThreads := playThreadsOverride > 0 ? playThreadsOverride : threadCount ; playThreads = threadCount unless override
-global highThreads := highThreadsOverride > 0 ? highThreadsOverride : affinityType != "N" ? Max(Floor(threadCount * 0.9), threadCount - 4) : threadCount ; highThreads = 90% threadCount unless N or override
-global lockThreads := lockThreadsOverride > 0 ? lockThreadsOverride : highThreads ; lockThreads = highThreads unless override
-global midThreads := midThreadsOverride > 0 ? midThreadsOverride : affinityType == "A" ? Ceil(threadCount * 0.7) : highThreads ; midThreads = 70% threadCount if advanced, otherwise highThreads unless override
-global lowThreads := lowThreadsOverride > 0 ? lowThreadsOverride : affinityType != "N" ? Ceil(threadCount * 0.5) : threadCount ; lowThreads = 50% threadCount unless N or override
-global superLowThreads := superLowThreadsOverride > 0 ? superLowThreadsOverride : affinityType != "N" ? Ceil(threadCount * 0.2) : threadCount ; superLowThreads = 20% threadCount unless N or override
+global highThreads := highThreadsOverride > 0 ? highThreadsOverride : threadCount ; highThreads = 100% threadCount unless N or override
+global lockThreads := lockThreadsOverride > 0 ? lockThreadsOverride : Floor(threadCount * 0.9) ; highThreads ; lockThreads = 80% threadCount if advanced, otherwise highThreads unless override
+global midThreads := midThreadsOverride > 0 ? midThreadsOverride : Floor(threadCount * 0.9) ; midThreads = 80% threadCount if advanced, otherwise highThreads unless override
+global lowThreads := lowThreadsOverride > 0 ? lowThreadsOverride : Ceil(threadCount * 0.2) ; lowThreads = 20% threadCount unless N or override
+global superLowThreads := superLowThreadsOverride > 0 ? superLowThreadsOverride : Ceil(threadCount * 0.1) ; superLowThreads = 10% threadCount unless N or override
 
 global playBitMask := GetBitMask(playThreads)
 global lockBitMask := GetBitMask(lockThreads)
