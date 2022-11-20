@@ -37,6 +37,6 @@ How does it work:
 * You can lock, and Reset (With reset All) in the Windowed Projector!
 
 ## **Advanced Affinity Management**
- When you look into the `settings.ahk` folder, you might have noticed that Affinity mode is missing, its because that in this macro, it is now forced to use that Advaced Option. This also have a different Thread Scheduler that is still being tested!.
+ When you look into the `settings.ahk` folder, you might have noticed that Affinity mode is missing, its because that in this macro, it is now forced to use the Advaced Option. This macro also have a different Thread Scheduler that is still being tested!.
 
  Feedbacks are really wanted for this feature, i would like to know if it does actually improve performance even further than spec's
