@@ -1,6 +1,6 @@
 ; v0.8
 return
-#If WinActive("Minecraft") && (WinActive("ahk_exe javaw.exe") || WinActive("ahk_exe java.exe"))
+#If WinActive("Minecraft") && (WinActive("ahk_exe javaw.exe") || WinActive("ahk_exe java.exe")) || WinActive("Full-screen Projector")
 {
   *End:: ExitWorld() ; Reset
   *Del:: PlayNextLock()
