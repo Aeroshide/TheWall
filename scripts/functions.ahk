@@ -11,6 +11,17 @@ SendLog(lvlText, msg) {
   FileAppend, [%A_TickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-%lvlText%] %msg%`n, data/log.log
 }
 
+NewSendLog(lvlText, msg, tickCount) {
+  file := FileOpen("data/log.log", "a -rw")
+  if (!IsObject(file)) {
+    logQueue := Func("SendLog").Bind(lvlText, msg, tickCount)
+    SetTimer, %logQueue%, -10
+    return
+  }
+  file.Close()
+  FileAppend, [%tickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-%lvlText%] %msg%`n, data/log.log
+}
+
 CheckOptionsForHotkey(file, optionsCheck, defaultKey) {
   Loop, Read, %file%
   {
@@ -236,28 +247,30 @@ GetAllPIDs()
   }
 }
 
-SetAffinities(bg:=false, play:=0) {
+SetAffinities(idx:=0) {
   for i, mcdir in McDirectories {
     pid := PIDs[i]
     idle := mcdir . "idle.tmp"
     hold := mcdir . "hold.tmp"
     preview := mcdir . "preview.tmp"
-    if (i == play) {
+    if (idx == i) { ; this is active instance
       SetAffinity(pid, playBitMask)
-    } else if bg {
-      if FileExist(idle)
-        SetAffinity(pid, superLowBitMask)
+    } else if (idx > 0) { ; there is another active instance
+      if !FileExist(idle)
+        SetAffinity(pid, bgLoadBitMask)
       else
         SetAffinity(pid, lowBitMask)
-    } else {
-      if (FileExist(idle) && !locked[i])
+    } else { ; there is no active instance
+      if FileExist(idle)
         SetAffinity(pid, lowBitMask)
-      else if (FileExist(hold))
-        SetAffinity(pid, highBitMask)
       else if locked[i]
         SetAffinity(pid, lockBitMask)
+      else if FileExist(hold)
+        SetAffinity(pid, highBitMask)
       else if FileExist(preview)
         SetAffinity(pid, midBitMask)
+      else
+        SetAffinity(pid, highBitMask)
     }
   }
 }
@@ -286,7 +299,7 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
     FileDelete,data/instance.txt
     FileAppend,%idx%,data/instance.txt
     pid := PIDs[idx]
-    SetAffinities(true, idx)
+    SetAffinities(idx)
     ;ControlSend,, {Blind}{Esc}, ahk_pid %pid%
     if doF1
       ControlSend,, {Blind}{F1}, ahk_pid %pid%
@@ -342,10 +355,10 @@ ExitWorld(nextInst:=-1)
     killFile := McDirectories[idx] . "kill.tmp"
     FileDelete,%holdFile%
     FileDelete, %killFile%
-    if (widthMultiplier) {
-      WinRestore, ahk_pid %pid%
+    SetAffinities(nextInst)
+    if (widthMultiplier)
       WinMove, ahk_pid %pid%,,0,0,%A_ScreenWidth%,%newHeight%
-    }
+    WinRestore, ahk_pid %pid%
     if (mode == "C" && nextInst == -1)
       nextInst := Mod(idx, instances) + 1
     else if ((mode == "B" || mode == "M") && nextInst == -1)
@@ -354,7 +367,6 @@ ExitWorld(nextInst:=-1)
       SwitchInstance(nextInst)
     else
       ToWall(idx)
-    SetAffinities()
     ResetInstance(idx)
     isWide := False
   }

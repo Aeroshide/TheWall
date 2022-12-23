@@ -20,7 +20,7 @@ global doF1 := False ; Toggle the f1 GUI hiding button on world join and reset
 ; Delays (Defaults are probably fine)
 global spawnProtection := 100 ; Prevent a new instance from being reset for this many milliseconds after the preview is visible
 global fullScreenDelay := 100 ; increse if fullscreening issues
-global obsDelay := 100 ; increase if not changing scenes in obs
+global obsDelay := 50 ; increase if not changing scenes in obs
 global tinderCheckBuffer := 5 ; When all instances cant reset, how often it checks for an instance in seconds
 
 ; Super advanced settings (Do not change unless you know exactly absolutely what you are doing
@@ -45,7 +45,7 @@ global obsUnlockMediaKey := "" ; Key pressed on any unlock instance with sound (
 
 ; Reset Management
 global resetManagementTimeout := -1 ; Time that pass before reset manager gives up (in seconds). Too high may leave unresetable instances, too low will leave instances unpaused. leave it be for no timeout
-global manageResetAfter := 200 ; Delay before starting reset management log reading loop. Default (200) likely fine
+global manageResetAfter := 300 ; Delay before starting reset management log reading loop. Default (300) likely fine
 global resetManagementLoopDelay := 120 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
 
 ; Attempts

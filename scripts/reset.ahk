@@ -38,28 +38,23 @@ OnMessage(MSG_RESET, "Reset")
 
 Reset() {
   if ((state == "resetting" && mode != "C") || state == "kill" || FileExist(killFile)) {
-    SendLog(LOG_LEVEL_INFO, Format("Instance {1} discarding reset management, state: {2}", idx, state))
+    FileDelete, %holdFile%
+    NewSendLog(LOG_LEVEL_INFO, Format("Instance {1} discarding reset management, state: {2}", idx, state), A_TickCount)
     return
   }
   state := "kill"
+  previewLoaded := false
   FileAppend,, %holdFile%
   FileDelete, %previewFile%
   FileDelete, %idleFile%
   lastImportantLine := GetLineCount(logFile)
   SetTimer, ManageReset, -%manageResetAfter%
-  if FileExist("data/instance.txt")
-    FileRead, activeInstance, data/instance.txt
-  if activeInstance
-    SetAffinity(pid, lowBitMask)
-  else
-    SetAffinity(pid, highBitMask)
-  if resetSounds {
+  if (resetSounds || obsResetMediaKey) {
     SoundPlay, A_ScriptDir\..\media\reset.wav
-    if obsResetMediaKey {
-      send {%obsResetMediaKey% down}
-      sleep, %obsDelay%
-      send {%obsResetMediaKey% up}
-    }
+
+    send {%obsResetMediaKey% down}
+    sleep, %obsDelay%
+    send {%obsResetMediaKey% up}
   }
 }
 
@@ -86,7 +81,7 @@ ManageReset() {
         FileDelete, %previewFile%
         FileAppend, %A_TickCount%, %previewFile%
         SendLog(LOG_LEVEL_INFO, Format("Instance {1} found preview on log line: {2}", idx, A_Index))
-        SetTimer, LowerPreviewAffinity, -%loadBurstLength%
+        SetTimer, ManageThisAffinity, -%loadBurstLength%
         Continue 2
       } else if (state != "idle" && InStr(A_LoopReadLine, "Loaded 0 advancements")) {
         ControlSend,, {Blind}{F3 Down}{Esc}{F3 Up}, ahk_pid %pid%
@@ -104,7 +99,7 @@ ManageReset() {
           SendLog(LOG_LEVEL_INFO, Format("Instance {1} found save on log line: {2}", idx, A_Index))
           state := "idle"
         }
-        SetTimer, LowerLoadedAffinity, -%loadBurstLength%
+        SetTimer, ManageThisAffinity, -%loadBurstLength%
         return
       }
     }
@@ -120,24 +115,27 @@ ManageReset() {
   }
 }
 
-LowerPreviewAffinity() {
-  if FileExist("data/instance.txt")
-    FileRead, activeInstance, data/instance.txt
-  if activeInstance
-    SetAffinity(pid, lowBitMask)
-  else
-    SetAffinity(pid, midBitMask)
-}
-
-LowerLoadedAffinity() {
-  if FileExist("data/instance.txt")
-    FileRead, activeInstance, data/instance.txt
-  if (activeInstance == idx)
+ManageThisAffinity() {
+  FileRead, activeInstance, data/instance.txt
+  if (idx == activeInstance) { ; this is active instance
     SetAffinity(pid, playBitMask)
-  else if (!activeInstance && FileExist(lockFile))
-    SetAffinity(pid, lockBitMask)
-  else if (!activeInstance)
-    SetAffinity(pid, lowBitMask)
-  else
-    SetAffinity(pid, superLowBitMask)
+  } else if activeInstance { ; there is another active instance
+    if (state != "idle") ; if loading
+      SetAffinity(pid, bgLoadBitMask)
+    else
+      SetAffinity(pid, lowBitMask)
+  } else { ; there is no active instance
+    if FileExist(lockFile) ; if locked
+      SetAffinity(pid, lockBitMask)
+    else if (state == "resetting") ; if resetting
+      SetAffinity(pid, highBitMask)
+    else if (state == "preview" && !previewLoaded) ; if preview gen not reached
+      SetAffinity(pid, midBitMask)
+    else if (state == "preview" && previewLoaded) ; if preview gen reached
+      SetAffinity(pid, lowBitMask)
+    else if (state == "idle") ; if idle
+      SetAffinity(pid, lowBitMask)
+    else
+      SetAffinity(pid, highBitMask)
+  }
 }

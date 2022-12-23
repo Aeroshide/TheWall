@@ -8,6 +8,6 @@ test.ahk
 *.ops
 *.txt
 settings-aero.ahk
-Setup.ahk
-MultiResetSetup-v0.3.ahk
-MultiInstanceStartup.py
+setup.ahk
+multiResetSetup-v0.3.ahk
+multiInstanceStartup.py
