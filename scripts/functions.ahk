@@ -421,18 +421,19 @@ SetTitles() {
 }
 
 ToWall(comingFrom) {
+  FileDelete,data/instance.txt
+  FileAppend,0,data/instance.txt
   WinMaximize, Fullscreen Projector
   WinActivate, Fullscreen Projector
-  if (useObsWebsocket) {
-    SendOBSCmd("ToWall")
-  }
-  else {
+  WinMaximize, Full-screen Projector
+  WinActivate, Full-screen Projector
+  if (obsControl != "C") {
     send {%obsWallSceneKey% down}
     sleep, %obsDelay%
     send {%obsWallSceneKey% up}
+  } else {
+    SendOBSCmd(Format("ToWall"))
   }
-  FileDelete,data/instance.txt
-  FileAppend,0,data/instance.txt
 }
 
 FocusReset(focusInstance, bypassLock:=false) {
