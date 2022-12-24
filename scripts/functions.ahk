@@ -300,12 +300,17 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
     FileAppend,%idx%,data/instance.txt
     pid := PIDs[idx]
     SetAffinities(idx)
-    ;ControlSend,, {Blind}{Esc}, ahk_pid %pid%
-    if doF1
+    if unpauseOnSwitch
+      ControlSend,, {Blind}{Esc}, ahk_pid %pid%
+    if (f1States[idx] == 2)
       ControlSend,, {Blind}{F1}, ahk_pid %pid%
+    if (widthMultiplier)
+      WinMaximize, ahk_pid %pid%
     WinSet, AlwaysOnTop, On, ahk_pid %pid%
     WinSet, AlwaysOnTop, Off, ahk_pid %pid%
+    ;ControlSend,, {Blind}{Esc}, ahk_pid %pid%
     WinMinimize, Fullscreen Projector
+    WinMinimize, Full-screen Projector
     if (widthMultiplier)
       WinMaximize, ahk_pid %pid%
     if (windowMode == "F") {

@@ -16,6 +16,7 @@ global useObsWebsocket := True ; Allows for > 9 instances (Additional setup requ
 global useSingleSceneOBS := False ; Allows for simple OBS setup & Tinder. (Additional setup required)
 global audioGui := False ; A simple GUI so the OBS application audio plugin can capture sounds
 global doF1 := False ; Toggle the f1 GUI hiding button on world join and reset
+global unpauseOnSwitch := False ; added this back because apparently people use it
 
 ; Delays (Defaults are probably fine)
 global spawnProtection := 100 ; Prevent a new instance from being reset for this many milliseconds after the preview is visible
