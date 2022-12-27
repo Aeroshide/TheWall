@@ -432,12 +432,12 @@ ToWall(comingFrom) {
   WinActivate, Fullscreen Projector
   WinMaximize, Full-screen Projector
   WinActivate, Full-screen Projector
-  if (obsControl != "C") {
+  if (useObsWebsocket != true) {
     send {%obsWallSceneKey% down}
     sleep, %obsDelay%
     send {%obsWallSceneKey% up}
   } else {
-    SendOBSCmd(Format("ToWall"))
+    SendOBSCmd("ToWall")
   }
 }
 
