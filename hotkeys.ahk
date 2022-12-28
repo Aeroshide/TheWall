@@ -1,8 +1,9 @@
 ; v0.8
 return
-#If WinActive("Minecraft") && (WinActive("ahk_exe javaw.exe") || WinActive("ahk_exe java.exe"))
+#If WinActive("Minecraft") && (WinActive("ahk_exe javaw.exe") || WinActive("ahk_exe java.exe")) || WinActive("Full-screen Projector")
 {
   *End:: ExitWorld() ; Reset
+  *Del:: PlayNextLock()
   ; Utility (Remove semicolon ';' and set a hotkey)
   ; ::WideHardo()
   ; ::OpenToLAN()
@@ -14,7 +15,7 @@ return
 }
 return
 
-#IfWinActive, Fullscreen Projector
+#If WinActive("Fullscreen Projector") || WinActive("Windowed Projector")
   {
     *Q::ResetInstance(MousePosToInstNumber())
     *W::SwitchInstance(MousePosToInstNumber())
@@ -22,9 +23,7 @@ return
     *R::ResetAll()
     F::Locking(MousePosToInstNumber())
     *D::ResetOverride(MousePosToInstNumber())
-
-    ; Optional (Remove semicolon ';' and set a hotkey)
-    ; ::PlayNextLock()
+    
 
     ; Reset keys (1-9)
     *1::
@@ -82,5 +81,34 @@ return
     return
     *+9::
       SwitchInstance(9)
+    return
+
+    ; Locking instance keys (Shift + 1-9)
+    *^1::
+      Locking(1)
+    return
+    *^2::
+      Locking(2)
+    return
+    *^3::
+      Locking(3)
+    return
+    *^4::
+      Locking(4)
+    return
+    *^5::
+      Locking(5)
+    return
+    *^6::
+      Locking(6)
+    return
+    *^7::
+      Locking(7)
+    return
+    *^8::
+      Locking(8)
+    return
+    *^9::
+      Locking(9)
     return
   }

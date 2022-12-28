@@ -5,8 +5,8 @@ multiMCLocation := "C:\Users\Aeroshide\Documents\MultiMC"
 multiMCNameFormat := "inst*"
 
 ; General settings
-global rows := 3 ; Number of row on the wall scene (the one that goes down)
-global cols := 4 ; Number of columns on the wall scene (the one that goes left)
+global rows := 2 ; Number of row on the wall scene (the one that goes down)
+global cols := 3 ; Number of columns on the wall scene (the one that goes left)
 global mode := "W" ; W = Normal wall, B = Wall bypass (skip to next locked), M = Modern multi (send to wall when none loaded), C = Classic original multi (always force to next instance)
 global windowMode := "B" ; W = windowed mode, F = fullscreen mode, B = borderless windowed
 
@@ -20,25 +20,25 @@ global useObsWebsocket := True ; Allows for > 9 instances (Additional setup requ
 global useSingleSceneOBS := False ; Allows for simple OBS setup & Tinder. (Additional setup required)
 global audioGui := False ; A simple GUI so the OBS application audio plugin can capture sounds
 global doF1 := False ; Toggle the f1 GUI hiding button on world join and reset
+global unpauseOnSwitch := False ; added this back because apparently people use it
 
 ; Delays (Defaults are probably fine)
 global spawnProtection := 100 ; Prevent a new instance from being reset for this many milliseconds after the preview is visible
 global fullScreenDelay := 100 ; increse if fullscreening issues
-global obsDelay := 100 ; increase if not changing scenes in obs
+global obsDelay := 50 ; increase if not changing scenes in obs
 global tinderCheckBuffer := 5 ; When all instances cant reset, how often it checks for an instance in seconds
 
 ; Super advanced settings (Do not change unless you know exactly absolutely what you are doing
 
-; Affinity
+; CPU Thread scheduling affinity
 ; -1 == use macro math to determine thread counts
-global affinityType := "A" ; N = no affinity management, B = basic affinity management, A = advanced affinity mangement (best if used with locking+resetAll)
-global playThreadsOverride := 8 ; Thread count dedicated to the instance you are playing
-global lockThreadsOverride := 5 ; Thread count dedicated to locked instances while on wall
-global highThreadsOverride := 7 ; Thread count dedicated to instances that have just been reset but not previewing
-global midThreadsOverride := 6 ; Thread count dedicated to loading preview instances on wall
-global lowThreadsOverride := 2 ; Thread count dedicated to loading bg instances and idle wall instances
-global superLowThreadsOverride := 1 ; Thread count dedicated to idle bg instances
-global loadBurstLength := 300 ; How many milliseconds the prior thread count stays dedicated to an instance before switching to the next stage while ACTIVELY LOADING INSTANCES (less important for basic affinity)
+global playThreadsOverride := -1 ; Thread count dedicated to the instance you are playing
+global lockThreadsOverride := -1 ; Thread count dedicated to locked instances while on wall
+global highThreadsOverride := -1 ; Thread count dedicated to instances that have just been reset but not previewing
+global midThreadsOverride := -1 ; Thread count dedicated to loading preview instances on wall
+global lowThreadsOverride := -1 ; Thread count dedicated to loading bg instances and idle wall instances
+global superLowThreadsOverride := -1 ; Thread count dedicated to idle bg instances
+global loadBurstLength := 75 ; How many milliseconds the prior thread count stays dedicated to an instance before switching to the next stage while ACTIVELY LOADING INSTANCES (less important for basic affinity)
 
 ; OBS
 global obsSceneControlType := "N" ; N = Numpad hotkeys (up to 9 instances), F = Function hotkeys f13-f24 (up to 12 instances), A = advanced key array (too many instances)
@@ -50,7 +50,7 @@ global obsUnlockMediaKey := "" ; Key pressed on any unlock instance with sound (
 
 ; Reset Management
 global resetManagementTimeout := -1 ; Time that pass before reset manager gives up (in seconds). Too high may leave unresetable instances, too low will leave instances unpaused. leave it be for no timeout
-global manageResetAfter := 200 ; Delay before starting reset management log reading loop. Default (200) likely fine
+global manageResetAfter := 300 ; Delay before starting reset management log reading loop. Default (300) likely fine
 global resetManagementLoopDelay := 120 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
 
 ; Attempts
