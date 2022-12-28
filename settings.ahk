@@ -4,6 +4,9 @@
 multiMCLocation := "C:\Users\Aeroshide\Documents\MultiMC"
 multiMCNameFormat := "inst*"
 
+global SeedsFilePath := "seeds.txt"
+global UsedSeedsPath := "seeds-used.txt"
+
 ; General settings
 global rows := 2 ; Number of row on the wall scene (the one that goes down)
 global cols := 3 ; Number of columns on the wall scene (the one that goes left)

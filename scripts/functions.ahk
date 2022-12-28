@@ -1,4 +1,9 @@
 ; v0.8
+#Include settings.ahk
+FileRead, UsedSeedFile, % UsedSeedsPath
+FileRead, SeedFile, % SeedsFilePath
+global SeedList := StrSplit(SeedFile, "`n")
+global UsedSeedList := StrSplit(UsedSeedFile, "`n")
 
 SendOBSCmd(cmd) {
     static cmdNum := 1
@@ -397,6 +402,30 @@ ResetOverride(idx) {
   }
 }
 
+GetNextSeed(idx){
+    currentSeed := SeedList[idx]
+
+    hasUsedSeed := HasUsedSeed(currentSeed)
+
+    if(hasUsedSeed){
+        return ""
+    }
+
+    FileAppend, %currentSeed%`n, %UsedSeedsPath%
+    UsedSeedList.Push(currentSeed)
+    return currentSeed
+}
+
+HasUsedSeed(currentSeed){
+    for i, usedSeed in UsedSeedList
+    {
+        if(StrLen(usedSeed) > 0){
+            if(usedSeed == currentSeed)
+                return true
+        }
+    }
+    return false
+}
 
 ResetInstance(idx) {
   holdFile := McDirectories[idx] . "hold.tmp"
@@ -409,7 +438,15 @@ ResetInstance(idx) {
     resetKey := resetKeys[idx]
     lpKey := lpKeys[idx]
     ControlSend, ahk_parent, {Blind}{%lpKey%}{%resetKey%}, ahk_pid %pid%
-    ControlSend,, {Blind}{Shift down}{Tab}{Shift up}{Enter}, ahk_pid %pid%
+    Random, nextRand, 0, 400
+    nextSeed := GetNextSeed(nextRand)
+
+    ControlSend,, {Blind}{Esc 3}{Shift Down}{Tab}{Enter}{Shift Up}{Tab}, ahk_pid %pid%
+    ControlSend,, ^a, ahk_pid %pid%
+    ControlSend,, %nextSeed%, ahk_pid %pid%
+    ControlSend,, {Blind}{Tab 5}{Enter}, ahk_pid %pid%
+    ControlSend,, {Shift Down}{Tab}{Shift Up}{Enter}, ahk_pid %pid%
+
     DetectHiddenWindows, On
     PostMessage, MSG_RESET,,,, ahk_pid %rmpid%
     DetectHiddenWindows, Off
@@ -432,6 +469,7 @@ ToWall(comingFrom) {
   WinActivate, Fullscreen Projector
   WinMaximize, Full-screen Projector
   WinActivate, Full-screen Projector
+  
   if (useObsWebsocket != true) {
     send {%obsWallSceneKey% down}
     sleep, %obsDelay%
