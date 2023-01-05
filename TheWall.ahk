@@ -1,4 +1,4 @@
-; A Wall-Style Multi-Instance macro for Minecraft
+; A Wall-Style Multi-Instance macro for Minecraft - DEV BRANCH
 ; By Specnr
 ; v0.8
 

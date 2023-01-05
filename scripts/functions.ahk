@@ -377,6 +377,7 @@ ExitWorld(nextInst:=-1)
       SwitchInstance(nextInst)
     else
       ToWall(idx)
+    ControlSend,, {Blind}{Esc 3}{ShiftDown}{Tab}{ShiftUp}{Enter}, ahk_pid %pid%
     ResetInstance(idx)
     isWide := False
   }
@@ -437,15 +438,15 @@ ResetInstance(idx) {
     rmpid := RM_PIDs[idx]
     resetKey := resetKeys[idx]
     lpKey := lpKeys[idx]
-    ControlSend, ahk_parent, {Blind}{%lpKey%}{%resetKey%}, ahk_pid %pid%
+    
     Random, nextRand, 0, 400
     nextSeed := GetNextSeed(nextRand)
+    SetKeyDelay, 300
 
-    ControlSend,, {Blind}{Esc 3}{Shift Down}{Tab}{Enter}{Shift Up}{Tab}, ahk_pid %pid%
-    ControlSend,, ^a, ahk_pid %pid%
-    ControlSend,, %nextSeed%, ahk_pid %pid%
-    ControlSend,, {Blind}{Tab 5}{Enter}, ahk_pid %pid%
-    ControlSend,, {Shift Down}{Tab}{Shift Up}{Enter}, ahk_pid %pid%
+    ControlSend,, {Blind}{Esc 3}{Tab}{Enter}, ahk_pid %pid%
+    ControlSend,, {Tab 4}{Enter}, ahk_pid %pid%
+    ControlSend,, {Tab 3}{Enter}{Tab 3}%nextSeed%, ahk_pid %pid%
+    ControlSend,, {Tab 6}{Enter}, ahk_pid %pid%
 
     DetectHiddenWindows, On
     PostMessage, MSG_RESET,,,, ahk_pid %rmpid%
