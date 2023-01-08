@@ -81,7 +81,7 @@ ManageReset() {
         FileDelete, %previewFile%
         FileAppend, %A_TickCount%, %previewFile%
         SendLog(LOG_LEVEL_INFO, Format("Instance {1} found preview on log line: {2}", idx, A_Index))
-        SetTimer, ManageThisAffinity, -%loadBurstLength%
+        SetTimer, LowerPreviewAffinity, -%loadBurstLength%
         Continue 2
       } else if (state != "idle" && InStr(A_LoopReadLine, "Loaded 0 advancements")) {
         ControlSend,, {Blind}{F3 Down}{Esc}{F3 Up}, ahk_pid %pid%
@@ -99,7 +99,7 @@ ManageReset() {
           SendLog(LOG_LEVEL_INFO, Format("Instance {1} found save on log line: {2}", idx, A_Index))
           state := "idle"
         }
-        SetTimer, ManageThisAffinity, -%loadBurstLength%
+        SetTimer, LowerLoadedAffinity, -%loadBurstLength%
         return
       }
     }
@@ -115,27 +115,24 @@ ManageReset() {
   }
 }
 
-ManageThisAffinity() {
-  FileRead, activeInstance, data/instance.txt
-  if (idx == activeInstance) { ; this is active instance
+LowerPreviewAffinity() {
+  if FileExist("data/instance.txt")
+    FileRead, activeInstance, data/instance.txt
+  if activeInstance
+    SetAffinity(pid, lowBitMask)
+  else
+    SetAffinity(pid, midBitMask)
+}
+
+LowerLoadedAffinity() {
+  if FileExist("data/instance.txt")
+    FileRead, activeInstance, data/instance.txt
+  if (activeInstance == idx)
     SetAffinity(pid, playBitMask)
-  } else if activeInstance { ; there is another active instance
-    if (state != "idle") ; if loading
-      SetAffinity(pid, bgLoadBitMask)
-    else
-      SetAffinity(pid, lowBitMask)
-  } else { ; there is no active instance
-    if FileExist(lockFile) ; if locked
-      SetAffinity(pid, lockBitMask)
-    else if (state == "resetting") ; if resetting
-      SetAffinity(pid, highBitMask)
-    else if (state == "preview" && !previewLoaded) ; if preview gen not reached
-      SetAffinity(pid, midBitMask)
-    else if (state == "preview" && previewLoaded) ; if preview gen reached
-      SetAffinity(pid, lowBitMask)
-    else if (state == "idle") ; if idle
-      SetAffinity(pid, lowBitMask)
-    else
-      SetAffinity(pid, highBitMask)
-  }
+  else if (!activeInstance && FileExist(lockFile))
+    SetAffinity(pid, lockBitMask)
+  else if (!activeInstance)
+    SetAffinity(pid, lowBitMask)
+  else
+    SetAffinity(pid, superLowBitMask)
 }
