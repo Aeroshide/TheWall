@@ -1,9 +1,9 @@
 ; v0.8
 
 ; General settings
-global rows := 2 ; Number of row on the wall scene (the one that goes down)
+global rows := 3 ; Number of row on the wall scene (the one that goes down)
 global cols := 3 ; Number of columns on the wall scene (the one that goes left)
-global mode := "W" ; W = Normal wall, B = Wall bypass (skip to next locked), M = Modern multi (send to wall when none loaded), C = Classic original multi (always force to next instance)
+global mode := "B" ; W = Normal wall, B = Wall bypass (skip to next locked), M = Modern multi (send to wall when none loaded), C = Classic original multi (always force to next instance)
 global windowMode := "B" ; W = windowed mode, F = fullscreen mode, B = borderless windowed
 
 ; Extra features
@@ -47,7 +47,7 @@ global obsUnlockMediaKey := "" ; Key pressed on any unlock instance with sound (
 ; Reset Management
 global resetManagementTimeout := -1 ; Time that pass before reset manager gives up (in seconds). Too high may leave unresetable instances, too low will leave instances unpaused. leave it be for no timeout
 global manageResetAfter := 300 ; Delay before starting reset management log reading loop. Default (300) likely fine
-global resetManagementLoopDelay := 120 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
+global resetManagementLoopDelay := 70 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
 
 ; Attempts
 global overallAttemptsFile := "data/ATTEMPTS.txt" ; File to write overall attempt count to
