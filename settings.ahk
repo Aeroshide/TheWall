@@ -7,16 +7,15 @@ global mode := "B" ; W = Normal wall, B = Wall bypass (skip to next locked), M =
 global windowMode := "B" ; W = windowed mode, F = fullscreen mode, B = borderless windowed
 
 ; Extra features
-global disableTTS := False
 global widthMultiplier := 2.5 ; How wide your instances go to maximize visibility :) (set to 0 for no width change)
+global coop := False ; Automatically opens to LAN when you load in a world
+global unpauseOnSwitch := False ; added this back because apparently people use it
+
+; Sounds
+global audioGui := False ; A simple GUI so the OBS application audio plugin can capture sounds
+global disableTTS := False
 global resetSounds := True ; Make a sound when you reset an instance
 global lockSounds := True ; Make a sound when you lock an instance
-global coop := False ; Automatically opens to LAN when you load in a world
-global useObsWebsocket := True ; Allows for > 9 instances (Additional setup required)
-global useSingleSceneOBS := False ; Allows for simple OBS setup & Tinder. (Additional setup required)
-global audioGui := False ; A simple GUI so the OBS application audio plugin can capture sounds
-global doF1 := False ; Toggle the f1 GUI hiding button on world join and reset
-global unpauseOnSwitch := False ; added this back because apparently people use it
 
 ; Delays (Defaults are probably fine)
 global spawnProtection := 100 ; Prevent a new instance from being reset for this many milliseconds after the preview is visible
@@ -37,7 +36,7 @@ global superLowThreadsOverride := -1 ; Thread count dedicated to idle bg instanc
 global loadBurstLength := 75 ; How many milliseconds the prior thread count stays dedicated to an instance before switching to the next stage while ACTIVELY LOADING INSTANCES (less important for basic affinity)
 
 ; OBS
-global obsSceneControlType := "N" ; N = Numpad hotkeys (up to 9 instances), F = Function hotkeys f13-f24 (up to 12 instances), A = advanced key array (too many instances)
+global obsSceneControlType := "C" ; C = Controller Script (infinite), N = Numpad hotkeys (up to 9 instances), F = Function hotkeys f13-f24 (up to 12 instances), A = advanced key array (too many instances)
 global obsWallSceneKey := "F12" ; All obs scene control types use wallSceneKey
 global obsCustomKeyArray := [] ; Must be used with advanced key array control type. Add keys in quotes separated by commas. The index in the array corresponds to the scene
 global obsResetMediaKey := "" ; Key pressed on any instance reset with sound (used for playing reset media file in obs for recordable/streamable resets and requires addition setup to work)

@@ -293,9 +293,6 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
     FileAppend,,%holdFile%
     killFile := McDirectories[idx] . "kill.tmp"
     FileAppend,,%killFile%
-    if (useObsWebsocket) {
-      SendOBSCmd("Play," . idx)
-    }
     FileDelete,data/instance.txt
     FileAppend,%idx%,data/instance.txt
     pid := PIDs[idx]
@@ -321,19 +318,23 @@ SwitchInstance(idx, skipBg:=false, from:=-1)
     if (coop)
       ControlSend,, {Blind}{Esc}{Tab 7}{Enter}{Tab 4}{Enter}{Tab}{Enter}, ahk_pid %pid%
     Send {LButton} ; Make sure the window is activated
-    if (!useObsWebsocket) {
-      if (obsSceneControlType == "N")
-        obsKey := "Numpad" . idx
-      else if (obsSceneControlType == "F")
-        obsKey := "F" . (idx+12)
-      else
-        obsKey := obsCustomKeyArray[idx]
+    if (obsSceneControlType == "N")
+      obsKey := "Numpad" . idx
+    else if (obsSceneControlType == "F")
+      obsKey := "F" . (idx+12)
+    else if (obsSceneControlType == "C")
+      SendOBSCmd("Play," . idx)
+    else
+      obsKey := obsCustomKeyArray[idx]
+
+    if (obsSceneControlType != "C")
+    {
       Send {%obsKey% down}
       Sleep, %obsDelay%
       Send {%obsKey% up}
     }
-  }
 
+  }     
 }
 
 GetActiveInstanceNum() {
@@ -361,6 +362,7 @@ ExitWorld(nextInst:=-1)
     FileDelete,%holdFile%
     FileDelete, %killFile%
     SetAffinities(nextInst)
+    ResetInstance(idx)
     if (widthMultiplier)
       WinMove, ahk_pid %pid%,,0,0,%A_ScreenWidth%,%newHeight%
     WinRestore, ahk_pid %pid%
@@ -372,7 +374,6 @@ ExitWorld(nextInst:=-1)
       SwitchInstance(nextInst)
     else
       ToWall(idx)
-    ResetInstance(idx)
     isWide := False
   }
 }
@@ -432,12 +433,12 @@ ToWall(comingFrom) {
   WinActivate, Fullscreen Projector
   WinMaximize, Full-screen Projector
   WinActivate, Full-screen Projector
-  if (useObsWebsocket != true) {
+  if (obsSceneControlType == "C") {
+    SendOBSCmd("ToWall")
+  } else {
     send {%obsWallSceneKey% down}
     sleep, %obsDelay%
     send {%obsWallSceneKey% up}
-  } else {
-    SendOBSCmd("ToWall")
   }
 }
 

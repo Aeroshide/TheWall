@@ -14,6 +14,7 @@ SetTitleMatchMode, 2
 ; Don't configure these
 global McDirectories := []
 global instances := 0
+global hwnds := []
 global rawPIDs := []
 global PIDs := []
 global RM_PIDs := []
@@ -25,6 +26,7 @@ global resetKeys := []
 global lpKeys := []
 global fsKeys := []
 global resets := 0
+global f1States := []
 
 EnvGet, threadCount, NUMBER_OF_PROCESSORS
 global playThreads := playThreadsOverride > 0 ? playThreadsOverride : threadCount ; playThreads = threadCount unless override

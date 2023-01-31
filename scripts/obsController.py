@@ -78,7 +78,7 @@ def execute_latest():
         logging.error(e)
 
 def script_description():
-    return f"Aeroshides's OBS Script for <a href=https://github.com/Aeroshide/TheWall>TheWall-nextGen </a></h3>"
+    return f"Aeroshide's OBS Script for <a href=https://github.com/Aeroshide/TheWall>TheWall-nextGen </a></h3>"
 
 def script_init():
     importlib.reload(settings)

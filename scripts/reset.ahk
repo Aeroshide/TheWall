@@ -51,10 +51,7 @@ Reset() {
   SetTimer, ManageReset, -%manageResetAfter%
   if (resetSounds || obsResetMediaKey) {
     SoundPlay, A_ScriptDir\..\media\reset.wav
-
-    send {%obsResetMediaKey% down}
     sleep, %obsDelay%
-    send {%obsResetMediaKey% up}
   }
 }
 
@@ -134,5 +131,5 @@ LowerLoadedAffinity() {
   else if (!activeInstance)
     SetAffinity(pid, lowBitMask)
   else
-    SetAffinity(pid, superLowBitMask)
+    SetAffinity(pid, highBitMask)
 }
