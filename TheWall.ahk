@@ -31,13 +31,11 @@ global f1States := []
 EnvGet, threadCount, NUMBER_OF_PROCESSORS
 global playThreads := playThreadsOverride > 0 ? playThreadsOverride : threadCount ; playThreads = threadCount unless override
 global highThreads := highThreadsOverride > 0 ? highThreadsOverride : threadCount ; highThreads = 100% threadCount unless N or override
-global lockThreads := lockThreadsOverride > 0 ? lockThreadsOverride : Floor(threadCount * 0.9) ; highThreads ; lockThreads = 80% threadCount if advanced, otherwise highThreads unless override
-global midThreads := midThreadsOverride > 0 ? midThreadsOverride : Floor(threadCount * 0.9) ; midThreads = 80% threadCount if advanced, otherwise highThreads unless override
+global midThreads := midThreadsOverride > 0 ? midThreadsOverride : Floor(threadCount * 0.9) ; midThreads = 90% threadCount if advanced, otherwise highThreads unless override
 global lowThreads := lowThreadsOverride > 0 ? lowThreadsOverride : Ceil(threadCount * 0.2) ; lowThreads = 20% threadCount unless N or override
-global superLowThreads := superLowThreadsOverride > 0 ? superLowThreadsOverride : Ceil(threadCount * 0.1) ; superLowThreads = 10% threadCount unless N or override
+global superLowThreads := superLowThreadsOverride > 0 ? superLowThreadsOverride : Floor(threadCount * 0.1) ; superLowThreads = 10% threadCount unless N or override
 
 global playBitMask := GetBitMask(playThreads)
-global lockBitMask := GetBitMask(lockThreads)
 global highBitMask := GetBitMask(highThreads)
 global midBitMask := GetBitMask(midThreads)
 global lowBitMask := GetBitMask(lowThreads)
@@ -78,8 +76,8 @@ for i, mcdir in McDirectories {
   VerifyInstance(mcdir, pid, i)
   resetKey := resetKeys[i]
   lpKey := lpKeys[i]
-  SendLog(LOG_LEVEL_INFO, Format("Running a reset manager: {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}", pid, logs, idle, hold, preview, lock, kill, resetKey, lpKey, i, highBitMask, midBitMask, lowBitMask, superLowBitMask, lockBitMask))
-  Run, "%A_ScriptDir%\scripts\reset.ahk" %pid% "%logs%" "%idle%" "%hold%" "%preview%" "%lock%" "%kill%" %resetKey% %lpKey% %i% %highBitMask% %midBitMask% %lowBitMask% %superLowBitMask% %lockBitMask%, %A_ScriptDir%,, rmpid
+  SendLog(LOG_LEVEL_INFO, Format("Running a reset manager: {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}", pid, logs, idle, hold, preview, lock, kill, resetKey, lpKey, i, highBitMask, midBitMask, lowBitMask, superLowBitMask))
+  Run, "%A_ScriptDir%\scripts\reset.ahk" %pid% "%logs%" "%idle%" "%hold%" "%preview%" "%lock%" "%kill%" %resetKey% %lpKey% %i% %highBitMask% %midBitMask% %lowBitMask% %superLowBitMask%, %A_ScriptDir%,, rmpid
   DetectHiddenWindows, On
   WinWait, ahk_pid %rmpid%
   DetectHiddenWindows, Off
@@ -122,6 +120,9 @@ for i, mcdir in McDirectories {
 
 SetTitles()
 
+FileDelete,data/instance.txt
+FileAppend,-1,data/instance.txt
+
 for i, tmppid in PIDs {
   SetAffinity(tmppid, highBitMask)
 }
@@ -130,6 +131,9 @@ if audioGui {
   Gui, New
   Gui, Show,, The Wall Audio
 }
+
+if !enableLogging
+  FileAppend, [%A_TickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-INFO] Logging is manually disabled by default; you can enable Logging in the Settings!`n, data/log.log
 
 if (useObsWebsocket) {
   WinWait, OBS

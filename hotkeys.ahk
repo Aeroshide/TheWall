@@ -1,6 +1,6 @@
 ; v0.8
 return
-#If WinActive("Minecraft") && (WinActive("ahk_exe javaw.exe") || WinActive("ahk_exe java.exe")) || WinActive("Full-screen Projector")
+#If WinActive("Minecraft") && (WinActive("ahk_exe javaw.exe") || WinActive("ahk_exe java.exe"))
 {
   *End:: ExitWorld() ; Reset
   *Del:: PlayNextLock()
@@ -15,7 +15,7 @@ return
 }
 return
 
-#If WinActive("Fullscreen Projector") || WinActive("Windowed Projector")
+#If WinActive("Fullscreen Projector") || WinActive("Full-screen Projector") || WinActive("Windowed Projector")
   {
     *Q::ResetInstance(MousePosToInstNumber())
     *W::SwitchInstance(MousePosToInstNumber())
@@ -83,7 +83,7 @@ return
       SwitchInstance(9)
     return
 
-    ; Locking instance keys (Shift + 1-9)
+    ; Locking instance keys (Ctrl + 1-9)
     *^1::
       Locking(1)
     return

@@ -27,12 +27,11 @@ global highBitMask := A_Args[11]
 global midBitMask := A_Args[12]
 global lowBitMask := A_Args[13]
 global superLowBitMask := A_Args[14]
-global lockBitMask := A_Args[15]
 
 global state := "unknown"
 global lastImportantLine := GetLineCount(logFile)
 
-SendLog(LOG_LEVEL_INFO, Format("Instance {1} reset manager started: {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}", idx, pid, logFile, idleFile, holdFile, previewFile, lockFile, killFile, resetKey, lpKey, highBitMask, midBitMask, lowBitMask, superLowBitMask, lockBitMask))
+SendLog(LOG_LEVEL_INFO, Format("Instance {1} reset manager started: {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13} {14} {15}", idx, pid, logFile, idleFile, holdFile, previewFile, lockFile, killFile, resetKey, lpKey, highBitMask, midBitMask, lowBitMask, superLowBitMask))
 
 OnMessage(MSG_RESET, "Reset")
 
@@ -115,7 +114,7 @@ ManageReset() {
 LowerPreviewAffinity() {
   if FileExist("data/instance.txt")
     FileRead, activeInstance, data/instance.txt
-  if activeInstance
+  if (activeInstance && activeInstance != -1)
     SetAffinity(pid, lowBitMask)
   else
     SetAffinity(pid, midBitMask)
@@ -126,10 +125,10 @@ LowerLoadedAffinity() {
     FileRead, activeInstance, data/instance.txt
   if (activeInstance == idx)
     SetAffinity(pid, playBitMask)
-  else if (!activeInstance && FileExist(lockFile))
-    SetAffinity(pid, lockBitMask)
-  else if (!activeInstance)
+  else if (!activeInstance && activeInstance != "-1")
     SetAffinity(pid, lowBitMask)
-  else
+  else if (activeInstance == "-1")
     SetAffinity(pid, highBitMask)
+  else
+    SetAffinity(pid, superLowBitMask)
 }

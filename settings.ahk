@@ -1,8 +1,8 @@
 ; v0.8
 
 ; General settings
-global rows := 3 ; Number of row on the wall scene (the one that goes down)
-global cols := 3 ; Number of columns on the wall scene (the one that goes left)
+global rows := 4 ; Number of row on the wall scene (the one that goes down)
+global cols := 2 ; Number of columns on the wall scene (the one that goes left)
 global mode := "B" ; W = Normal wall, B = Wall bypass (skip to next locked), M = Modern multi (send to wall when none loaded), C = Classic original multi (always force to next instance)
 global windowMode := "B" ; W = windowed mode, F = fullscreen mode, B = borderless windowed
 
@@ -28,7 +28,6 @@ global tinderCheckBuffer := 5 ; When all instances cant reset, how often it chec
 ; CPU Thread scheduling affinity
 ; -1 == use macro math to determine thread counts
 global playThreadsOverride := -1 ; Thread count dedicated to the instance you are playing
-global lockThreadsOverride := -1 ; Thread count dedicated to locked instances while on wall
 global highThreadsOverride := -1 ; Thread count dedicated to instances that have just been reset but not previewing
 global midThreadsOverride := -1 ; Thread count dedicated to loading preview instances on wall
 global lowThreadsOverride := -1 ; Thread count dedicated to loading bg instances and idle wall instances
@@ -43,11 +42,10 @@ global obsResetMediaKey := "" ; Key pressed on any instance reset with sound (us
 global obsLockMediaKey := "" ; Key pressed on any lock instance with sound (used for playing lock media file in obs for recordable/streamable lock sounds and requires addition setup to work)
 global obsUnlockMediaKey := "" ; Key pressed on any unlock instance with sound (used for playing unlock media file in obs for recordable/streamable unlock sounds and requires addition setup to work)
 
-; Reset Management
+; Others
 global resetManagementTimeout := -1 ; Time that pass before reset manager gives up (in seconds). Too high may leave unresetable instances, too low will leave instances unpaused. leave it be for no timeout
 global manageResetAfter := 300 ; Delay before starting reset management log reading loop. Default (300) likely fine
 global resetManagementLoopDelay := 70 ; Buffer time between log lines check in reset management loop. Lowering will decrease possible pause latencies but increase cpu usage of reset managers. Default (70) likely fine
-
-; Attempts
+global enableLogging := false ; maybe would improve performance??, idk only my theory, only enable this to diagnose issues
 global overallAttemptsFile := "data/ATTEMPTS.txt" ; File to write overall attempt count to
 global dailyAttemptsFile := "data/ATTEMPTS_DAY.txt" ; File to write daily attempt count to

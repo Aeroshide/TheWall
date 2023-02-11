@@ -8,18 +8,23 @@ SendOBSCmd(cmd) {
 }
 
 SendLog(lvlText, msg) {
-  FileAppend, [%A_TickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-%lvlText%] %msg%`n, data/log.log
+  if enableLogging
+    FileAppend, [%A_TickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-%lvlText%] %msg%`n, data/log.log
 }
 
 NewSendLog(lvlText, msg, tickCount) {
-  file := FileOpen("data/log.log", "a -rw")
-  if (!IsObject(file)) {
-    logQueue := Func("SendLog").Bind(lvlText, msg, tickCount)
-    SetTimer, %logQueue%, -10
-    return
+  if (enableLogging)
+  {
+    file := FileOpen("data/log.log", "a -rw")
+    if (!IsObject(file)) {
+      logQueue := Func("SendLog").Bind(lvlText, msg, tickCount)
+      SetTimer, %logQueue%, -10
+      return
+    }
+    file.Close()
+    FileAppend, [%tickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-%lvlText%] %msg%`n, data/log.log
   }
-  file.Close()
-  FileAppend, [%tickCount%] [%A_YYYY%-%A_MM%-%A_DD% %A_Hour%:%A_Min%:%A_Sec%] [SYS-%lvlText%] %msg%`n, data/log.log
+
 }
 
 CheckOptionsForHotkey(file, optionsCheck, defaultKey) {
@@ -263,8 +268,6 @@ SetAffinities(idx:=0) {
     } else { ; there is no active instance
       if FileExist(idle)
         SetAffinity(pid, lowBitMask)
-      else if locked[i]
-        SetAffinity(pid, lockBitMask)
       else if FileExist(hold)
         SetAffinity(pid, highBitMask)
       else if FileExist(preview)
@@ -484,14 +487,10 @@ LockInstance(idx, sound:=true, affinityChange:=true) {
       send {%obsLockMediaKey% up}
     }
   }
-  if affinityChange {
-    pid := PIDs[idx]
-    SetAffinity(pid, lockBitMask)
-  }
 }
 
 Locking(idx, sound:=true, affinityChange:=true) 
-{ ;EXPERIMENTAL (CODE NOT TESTED)
+{
   if (locked[idx] == true)
   {
     locked[idx] := false
@@ -506,10 +505,6 @@ Locking(idx, sound:=true, affinityChange:=true)
       send {%obsUnlockMediaKey% down}
       sleep, %obsDelay%
       send {%obsUnlockMediaKey% up}
-    }
-    if affinityChange {
-      pid := PIDs[idx]
-      SetAffinity(pid, lowBitMask)
     }
 
     Return
@@ -528,11 +523,6 @@ Locking(idx, sound:=true, affinityChange:=true)
       send {%obsLockMediaKey% down}
       sleep, %obsDelay%
       send {%obsLockMediaKey% up}
-    }
-
-    if affinityChange {
-      pid := PIDs[idx]
-      SetAffinity(pid, lockBitMask)
     }
     Return
   }
