@@ -42,7 +42,6 @@ Reset() {
     return
   }
   state := "kill"
-  previewLoaded := false
   FileAppend,, %holdFile%
   FileDelete, %previewFile%
   FileDelete, %idleFile%
@@ -77,7 +76,7 @@ ManageReset() {
         FileDelete, %previewFile%
         FileAppend, %A_TickCount%, %previewFile%
         SendLog(LOG_LEVEL_INFO, Format("Instance {1} found preview on log line: {2}", idx, A_Index))
-        SetTimer, LowerPreviewAffinity, -%loadBurstLength%
+        SetTimer, ManageThisAffinity, -%loadBurstLength%
         Continue 2
       } else if (state != "idle" && InStr(A_LoopReadLine, "Loaded 0 advancements")) {
         ControlSend,, {Blind}{F3 Down}{Esc}{F3 Up}, ahk_pid %pid%
@@ -95,7 +94,7 @@ ManageReset() {
           SendLog(LOG_LEVEL_INFO, Format("Instance {1} found save on log line: {2}", idx, A_Index))
           state := "idle"
         }
-        SetTimer, LowerLoadedAffinity, -%loadBurstLength%
+        SetTimer, ManageThisAffinity, -%loadBurstLength%
         return
       }
     }
@@ -111,24 +110,23 @@ ManageReset() {
   }
 }
 
-LowerPreviewAffinity() {
-  if FileExist("data/instance.txt")
-    FileRead, activeInstance, data/instance.txt
-  if (activeInstance && activeInstance != -1)
-    SetAffinity(pid, lowBitMask)
-  else
-    SetAffinity(pid, midBitMask)
-}
-
-LowerLoadedAffinity() {
-  if FileExist("data/instance.txt")
-    FileRead, activeInstance, data/instance.txt
-  if (activeInstance == idx)
+ManageThisAffinity(){
+  FileRead, activeInstance, data/instance.txt
+  if (idx == activeInstance) { ; this is active instance
     SetAffinity(pid, playBitMask)
-  else if (!activeInstance && activeInstance != "-1")
-    SetAffinity(pid, lowBitMask)
-  else if (activeInstance == "-1")
-    SetAffinity(pid, highBitMask)
-  else
-    SetAffinity(pid, superLowBitMask)
+  } else if activeInstance { ; there is another active instance
+    if (activeInstance != "-1")
+      SetAffinity(pid, lowBitMask)
+    else
+      SetAffinity(pid, highBitMask)
+  } else { ; there is no active instance
+    if (state == "resetting") ; if resetting
+      SetAffinity(pid, highBitMask)
+    else if (state == "preview") ; if preview gen not reached
+      SetAffinity(pid, midBitMask)
+    else if (state == "idle") ; if idle
+      SetAffinity(pid, lowBitMask)
+    else
+      SetAffinity(pid, superlowBitMask)
+  }
 }
