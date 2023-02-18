@@ -71,16 +71,17 @@ ManageReset() {
       if (state == "resetting" && InStr(A_LoopReadLine, "Starting Preview")) {
         ControlSend,, {Blind}{F3 Down}{Esc}{F3 Up}, ahk_pid %pid%
         state := "preview"
+        SetTimer, LowerPreviewAffinity, -%loadBurstLength%
         lastImportantLine := GetLineCount(logFile)
         FileDelete, %holdFile%
         FileDelete, %previewFile%
         FileAppend, %A_TickCount%, %previewFile%
         SendLog(LOG_LEVEL_INFO, Format("Instance {1} found preview on log line: {2}", idx, A_Index))
-        SetTimer, LowerPreviewAffinity, -%loadBurstLength%
         Continue 2
       } else if (state != "idle" && InStr(A_LoopReadLine, "Loaded 0 advancements")) {
         ControlSend,, {Blind}{F3 Down}{Esc}{F3 Up}, ahk_pid %pid%
         lastImportantLine := GetLineCount(logFile)
+        SetTimer, LowerLoadedAffinity, -%loadBurstLength%
         FileDelete, %holdFile%
         if !FileExist(previewFile)
           FileAppend, %A_TickCount%, %previewFile%
@@ -94,7 +95,6 @@ ManageReset() {
           SendLog(LOG_LEVEL_INFO, Format("Instance {1} found save on log line: {2}", idx, A_Index))
           state := "idle"
         }
-        SetTimer, LowerLoadedAffinity, -%loadBurstLength%
         return
       }
     }
