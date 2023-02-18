@@ -166,7 +166,7 @@ if (!disableTTS)
 
 #Persistent
 OnExit, ExitSub
-SetTimer, CheckScripts, 20
+SetTimer, CheckScripts, 80
 return
 
 ExitSub:
@@ -185,16 +185,6 @@ ExitApp
 
 CheckScripts:
   Critical
-  if (useSingleSceneOBS && needBgCheck && A_NowUTC - lastChecked > tinderCheckBuffer) {
-    newBg := GetFirstBgInstance()
-    if (newBg != -1) {
-      SendLog(LOG_LEVEL_INFO, Format("Instance {1} was found and will be used with tinder", newBg))
-      SendOBSCmd("tm -1" . " " . newBg)
-      needBgCheck := False
-      currBg := newBg
-    }
-    lastChecked := A_NowUTC
-  }
   if resets
     CountAttempts()
 return

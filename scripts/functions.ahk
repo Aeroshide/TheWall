@@ -261,9 +261,6 @@ SetAffinities(idx:=0) {
     if (idx == i) { ; this is active instance
       SetAffinity(pid, playBitMask)
     } else if (idx > 0) { ; there is another active instance
-      if !FileExist(idle)
-        SetAffinity(pid, bgLoadBitMask)
-      else
         SetAffinity(pid, lowBitMask)
     } else { ; there is no active instance
       if FileExist(idle)

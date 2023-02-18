@@ -1,7 +1,7 @@
 ; v0.8
 
 ; General settings
-global rows := 4 ; Number of row on the wall scene (the one that goes down)
+global rows := 3 ; Number of row on the wall scene (the one that goes down)
 global cols := 2 ; Number of columns on the wall scene (the one that goes left)
 global mode := "B" ; W = Normal wall, B = Wall bypass (skip to next locked), M = Modern multi (send to wall when none loaded), C = Classic original multi (always force to next instance)
 global windowMode := "B" ; W = windowed mode, F = fullscreen mode, B = borderless windowed
